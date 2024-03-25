@@ -1,6 +1,15 @@
 import csv
+import pandas as pd
 
-with open('data/Groceries_dataset.csv') as csvfile:
-    reader = csv.reader(csvfile)
-    for row in reader:
-        print(row)
+data = pd.read_csv('data/Groceries_dataset.csv')
+data.columns = ['memberID', 'Date', 'itemName']
+data.Date = pd.to_datetime(data.Date)
+data.memberID = data['memberID'].astype('str')
+
+print(data)
+
+Frequency_of_items = data.groupby(pd.Grouper(key='itemName')).size().reset_index(name='count')
+print(Frequency_of_items)
+    
+    
+        
