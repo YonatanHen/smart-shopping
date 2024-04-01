@@ -1,2 +1,3 @@
 /cmd
 /venv
+*__pycache__*
