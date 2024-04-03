@@ -1,13 +1,10 @@
 from __future__ import division
 #import libraries
 import pandas as pd
-from typing import Dict, Text
 
-import numpy as np
-import tensorflow as tf
-
-import tensorflow_datasets as tfds
-import tensorflow_recommenders as tfrs
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report
 #do not show warnings
 import warnings
 warnings.filterwarnings("ignore")
@@ -22,10 +19,46 @@ max_purchase_date = data.groupby(pd.Grouper(key='item_name')).date.max().reset_i
 
 frequency_of_items = data.groupby(pd.Grouper(key='item_name')).size().reset_index(name='count')
 
-average_purchase_interval = data.groupby('item_name').date.apply(lambda x: x.diff().mean()).reset_index(name='avg_interval')
+average_purchase_interval = data.groupby(pd.Grouper(key='item_name')).date.apply(lambda x: x.diff().mean()).reset_index(name='avg_interval')
+
+df = pd.merge(max_purchase_date,frequency_of_items,on='item_name')
+df = pd.merge(df, average_purchase_interval, on='item_name')
+
+df['last_purchased'] = pd.to_datetime(df['last_purchased'])
+df['avg_interval'] = pd.to_timedelta(df['avg_interval']).dt.total_seconds()
+df['last_purchased'] = pd.to_timedelta(df['avg_interval']).dt.total_seconds()
+
+df['count'].fillna(0, inplace=True)
+df['avg_interval'].fillna(0, inplace=True)
+
+print(df)
+# df = df.drop(columns=['item_name'])
+
+X = df[['count', 'avg_interval', 'last_purchased']]  # Features
+y = df['item_name']  # Target variable
 
 
-# TODO: https://towardsdatascience.com/predicting-next-purchase-day-15fae5548027#:~:text=For%20RFM%2C%20to%20not%20repeat%20Part%202%2C%20we%20share%20the%20code%20block%20and%20move%20forward%3A 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(X_train.shape)
+
+dtc = DecisionTreeClassifier()
+
+dtc.fit(X_train, y_train)
+
+y_pred = dtc.predict(X_test)
+print(y_pred)
+
+features = pd.DataFrame(dtc.feature_importances_, index= X.columns)
+
+# Make predictions
+# predictions = model.predict(X_test)
+
+# predictions = pd.to_datetime(predictions)
+
+# Evaluate the model
+# mse = mean_squared_error(y_test, predictions)
+# print('Mean Squared Error:', mse)
 
 
 
