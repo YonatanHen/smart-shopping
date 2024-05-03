@@ -35,7 +35,7 @@ print(df)
 # df = df.drop(columns=['item_name'])
 
 X = df[['count', 'avg_interval', 'last_purchased']]  # Features
-y = df['item_name']  # Target variable
+y = df['item_name']  # Target variablexw
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
 
@@ -49,15 +49,6 @@ y_pred = dtc.predict(X_test)
 print(y_pred, len(y_pred))
 
 features = pd.DataFrame(dtc.feature_importances_, index= X.columns)
-
-# Make predictions
-# predictions = model.predict(X_test)
-
-# predictions = pd.to_datetime(predictions)
-
-# Evaluate the model
-# mse = mean_squared_error(y_test, predictions)
-# print('Mean Squared Error:', mse)
 
 
 
