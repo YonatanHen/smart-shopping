@@ -1,7 +1,24 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 
-app = Flask(__name__)
+app = Flask("Shopping list")
+app = Flask(__name__.split('.')[0])
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+@app.route('/')
+def index():
+    return 'Hello World'
+
+@app.route('/test', methods=['GET'])
+def test():
+    return 'Test successful'
+
+@app.route('/json-test', methods=['POST'])
+def post_test():
+    try:
+        json_data = request.get_json()
+        return jsonify(json_data)
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({'error': error_message}), 400
+
+if __name__ == '__main__':
+    app.run(debug=True)
