@@ -9,7 +9,7 @@ from sklearn.metrics import classification_report
 import warnings
 warnings.filterwarnings("ignore")
 
-data = pd.read_csv('data/Groceries_dataset.csv')
+data = pd.read_csv('temp_data/Groceries_dataset.csv')
 data.columns = ['product_id', 'date', 'item_name']
 data.date = pd.to_datetime(data.date)
 data = data.sort_values(by='date')

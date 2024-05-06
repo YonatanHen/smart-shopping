@@ -7,10 +7,6 @@ app = Flask(__name__.split('.')[0])
 def index():
     return 'Hello World'
 
-@app.route('/test', methods=['GET'])
-def test():
-    return 'Test successful'
-
 @app.route('/json-test', methods=['POST'])
 def post_test():
     try:
@@ -19,6 +15,14 @@ def post_test():
     except Exception as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 400
+
+@app.route('/add-grocery', methods=['POST'])
+def add_grocery():
+    return        
+
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    return 
 
 if __name__ == '__main__':
     app.run(debug=True)
