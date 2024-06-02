@@ -1,20 +1,39 @@
 import pandas as pd
 import warnings
+import sys
+import os
+from sqlalchemy.orm import sessionmaker
 
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 
-from __future__ import division
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from DB.PsqlConnection import engine
+from models import Product
 
 #do not show warnings
 warnings.filterwarnings("ignore")
 
 def get_data():
+    # data = pd.read_csv('../../temp_data/Groceries_dataset.csv')
+    # data.columns = ['product_id', 'date', 'item_name']
+    # data.date = pd.to_datetime(data.date)
+    # data = data.sort_values(by='date')
+    Session = sessionmaker(bind=engine)
     
-    data = pd.read_csv('../../temp_data/Groceries_dataset.csv')
-    data.columns = ['product_id', 'date', 'item_name']
-    data.date = pd.to_datetime(data.date)
-    data = data.sort_values(by='date')
+    session = Session()
+    
+    res = session.query(Product).all()
+    
+    data = pd.DataFrame([{
+        'product_id': item.id,
+        'list': item.list_id,
+        'item_name': item.item_name
+    } for item in res])
+    
+    # Close the session
+    session.close()
     
     return data
 
@@ -57,5 +76,5 @@ def get_list():
 
     # features = pd.DataFrame(dtc.feature_importances_, index= X.columns)
 
-
+print(get_data())
 
