@@ -1,4 +1,9 @@
 from flask import Flask, request, jsonify
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from ML.fetch import get_products
 
 app = Flask("Shopping list")
 app = Flask(__name__.split('.')[0])
@@ -15,6 +20,15 @@ def post_test():
     except Exception as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 400
+
+@app.route('/products', methods=['GET'])
+def products():
+    try:
+        product_list = get_products()
+        return jsonify(product_list.to_dict(orient="records"))
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({'error': error_message}), 500
 
 @app.route('/add-grocery', methods=['POST'])
 def add_grocery():

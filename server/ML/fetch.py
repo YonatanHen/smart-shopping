@@ -15,11 +15,7 @@ from models import Product
 #do not show warnings
 warnings.filterwarnings("ignore")
 
-def get_data():
-    # data = pd.read_csv('../../temp_data/Groceries_dataset.csv')
-    # data.columns = ['product_id', 'date', 'item_name']
-    # data.date = pd.to_datetime(data.date)
-    # data = data.sort_values(by='date')
+def get_products():
     Session = sessionmaker(bind=engine)
     
     session = Session()
@@ -39,7 +35,7 @@ def get_data():
 
 
 def get_list():
-    data = get_data()
+    # data = get_products_data()
     
     #Get last date when each item was purchased
     max_purchase_date = data.groupby(pd.Grouper(key='item_name')).date.max().reset_index(name='last_purchased')
@@ -74,7 +70,4 @@ def get_list():
     y_pred = dtc.predict(X_test)
     print(y_pred, len(y_pred))
 
-    # features = pd.DataFrame(dtc.feature_importances_, index= X.columns)
-
-print(get_data())
 
