@@ -20,9 +20,5 @@ def post_test():
 def add_grocery():
     return        
 
-@app.route('/recommend', methods=['POST'])
-def recommend():
-    return 
-
 if __name__ == '__main__':
     app.run(debug=True)
