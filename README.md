@@ -1,2 +1,2 @@
 # smart-shopping
-The Project is still in development progress :)
+The project is still in development progress :)
