@@ -34,8 +34,8 @@ def get_products():
     return data
 
 
-def get_list():
-    # data = get_products_data()
+def create_new_list():
+    data = get_products()
     
     #Get last date when each item was purchased
     max_purchase_date = data.groupby(pd.Grouper(key='item_name')).date.max().reset_index(name='last_purchased')
