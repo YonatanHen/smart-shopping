@@ -10,7 +10,7 @@ from sklearn.tree import DecisionTreeClassifier
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from DB.PsqlConnection import engine
-from models import Product
+from models import Product, List
 
 #do not show warnings
 warnings.filterwarnings("ignore")
@@ -22,7 +22,7 @@ def get_products():
     
     res = session.query(Product).all()
     
-    data = pd.DataFrame([{
+    products_data = pd.DataFrame([{
         'product_id': item.id,
         'list': item.list_id,
         'item_name': item.item_name
@@ -31,8 +31,24 @@ def get_products():
     # Close the session
     session.close()
     
-    return data
+    return products_data
 
+def get_list():
+    Session = sessionmaker(bind=engine)
+    
+    session = Session()
+    
+    res = session.query(List).all()
+    
+    list_data = pd.DataFrame([{
+        'list_id': item.id,
+        'date': item.date
+    } for item in res])
+    
+    # Close the session
+    session.close()
+    
+    return list_data
 
 def create_new_list():
     data = get_products()
