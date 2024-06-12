@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from DB.PsqlConnection import engine
-from datetime import datetime
 
 Base = declarative_base()
 
@@ -20,24 +18,4 @@ class List(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(DateTime, index=True)
 
-# Base.metadata.create_all(bind=engine)
 
-# new_list = List(date=datetime.now())
-
-# # Define grocery items
-# grocery_items = ["Apples", "Bananas", "Milk", "Bread", "Eggs"]
-
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-# session = SessionLocal()
-
-# session.add(new_list)
-
-# session.commit()
-
-# # Create product instances and associate them with the list
-# for item in grocery_items:
-#     new_product = Product(item_name=item, list_id=new_list.id)
-#     session.add(new_product)
-
-# # Commit the changes to the database
-# session.commit()
