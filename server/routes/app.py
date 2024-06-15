@@ -12,15 +12,6 @@ app = Flask(__name__.split('.')[0])
 def index():
     return 'Hello World'
 
-@app.route('/json-test', methods=['POST'])
-def post_test():
-    try:
-        json_data = request.get_json()
-        return jsonify(json_data)
-    except Exception as e:
-        error_message = str(e)
-        return jsonify({'error': error_message}), 400
-
 @app.route('/products', methods=['GET'])
 def products():
     try:
