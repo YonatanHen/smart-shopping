@@ -10,7 +10,7 @@ app = Flask(__name__.split('.')[0])
 
 @app.route('/')
 def index():
-    return 'Hello World'
+    return 'Smart Shopping App'
 
 @app.route('/products', methods=['GET'])
 def products():
