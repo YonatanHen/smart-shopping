@@ -21,6 +21,8 @@ def products():
         error_message = str(e)
         return jsonify({'error': error_message}), 500
 
+@app.route('/')
+
 @app.route('/add-grocery', methods=['POST'])
 def add_grocery():
     return        
