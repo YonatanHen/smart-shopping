@@ -3,6 +3,8 @@ import warnings
 import sys
 import os
 from sqlalchemy.orm import sessionmaker
+from datetime import datetime
+from models import Product, List, Base
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -29,3 +31,23 @@ def get_products():
     session.close()
     
     return products_data
+
+def add_products(groceries_items):
+    Base.metadata.create_all(bind=engine)
+
+    new_list = List(date=datetime.now())
+
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    session = SessionLocal()
+
+    session.add(new_list)
+
+    session.commit()
+
+    # Create product instances and associate them with the list
+    for item in groceries_items:
+        new_product = Product(item_name=item, list_id=new_list.id)
+        session.add(new_product)
+
+    # Commit the changes to the database
+    session.commit()
