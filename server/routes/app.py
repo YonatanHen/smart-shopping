@@ -23,8 +23,8 @@ def products():
 
 @app.route('/')
 
-@app.route('/add-grocery', methods=['POST'])
-def add_grocery():
+@app.route('/add-list', methods=['POST'])
+def add_list():
     return        
 
 if __name__ == '__main__':
