@@ -9,7 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from DB.PsqlConnection import engine
+from DB.PsqlConnection import psql_connection
 from product_service import get_products
 from models import List
 
@@ -17,6 +17,7 @@ from models import List
 warnings.filterwarnings("ignore")
 
 def get_lists():
+    engine=psql_connection()
     Session = sessionmaker(bind=engine)
     
     session = Session()
