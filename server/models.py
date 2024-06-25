@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -17,4 +18,6 @@ class List(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(DateTime, index=True)
 
+    # Relationship to Product
+    products = relationship('Product', backref='list', lazy='dynamic')
 
