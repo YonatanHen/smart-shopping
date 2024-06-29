@@ -1,10 +1,11 @@
+from sqlalchemy.orm import sessionmaker, scoped_session
 import unittest
 import sys
 import os
-from sqlalchemy.orm import sessionmaker, scoped_session
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from services.product_service import *
 from models import Product, List, Base
 from DB.PsqlConnection import engine
 from datetime import datetime
@@ -40,29 +41,15 @@ class LearnTest(unittest.TestCase):
         """
         self.session.rollback()
         self.session.close()
-    
+        
     def test_create_list(self):
         """
         This function tests the creation of a list with some products.
         """
-        new_list = List(date=datetime.now())
-
         # Define grocery items
         grocery_items = ["Eggs", "Chicken Breast", "Soy Milk"]
 
-        self.session.add(new_list)
-        self.session.commit()
-        
-        # Refresh the list object to access the products
-        self.session.refresh(new_list)
-
-        # Create product instances and associate them with the list
-        for item in grocery_items:
-            new_product = Product(item_name=item, list_id=new_list.id)
-            self.session.add(new_product)
-
-        # Commit the changes to the database
-        self.session.commit()
+        new_list=add_products(grocery_items, self.session)
         
         # Assertions to ensure the list and products were created
         created_list = self.session.query(List).filter_by(id=new_list.id).one()
@@ -70,7 +57,7 @@ class LearnTest(unittest.TestCase):
         self.assertEqual(created_list.products.count(), len(grocery_items))
         for product in created_list.products:
             self.assertIn(product.item_name, grocery_items)
-        
+            
     def test_create_empty_list(self):
         """
         This function tests the creation of an empty list.

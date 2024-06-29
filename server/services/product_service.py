@@ -32,13 +32,14 @@ def get_products():
     
     return products_data
 
-def add_products(groceries_items):
+def add_products(groceries_items, session=None):
     Base.metadata.create_all(bind=engine)
 
     new_list = List(date=datetime.now())
 
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    session = SessionLocal()
+    if session is None:
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        session = SessionLocal()
 
     session.add(new_list)
 
@@ -51,3 +52,5 @@ def add_products(groceries_items):
 
     # Commit the changes to the database
     session.commit()
+
+    return new_list
