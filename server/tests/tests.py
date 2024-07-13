@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from services.product_service import *
 from services.list_service import *
-from models import Product, List, Base
+from models import List, Base
 from DB.PsqlConnection import engine
 from datetime import datetime
 
@@ -43,7 +43,7 @@ class LearnTest(unittest.TestCase):
         self.session.rollback()
         self.session.close()
         
-    def test_create_list(self):
+    def test_01_create_list(self):
         """
         This function tests the creation of a list with some products.
         """
@@ -59,7 +59,28 @@ class LearnTest(unittest.TestCase):
         for product in created_list.products:
             self.assertIn(product.item_name, grocery_items)
             
-    def test_create_empty_list(self):
+    def test_02_update_product_in_list(self):
+        """
+        This function test an addition of products of an existing list.
+        """
+        new_grocery_items = ["Bread", "Sugar"]
+        
+        list_to_update = self.session.query(List).first()
+                
+        updated_list = add_products_to_list(list_to_update.id, new_grocery_items,self.session)
+        
+        list_after_update = self.session.query(List).filter_by(id=updated_list.id).one()
+        
+        list_items_after_update = [p.item_name for p in list_after_update.products]
+        
+        print(f"list after update id is {list_after_update.id}, list products are: {list_items_after_update}")
+        
+        self.assertIsNotNone(list_after_update)
+        self.assertEqual(list_after_update.products.count(), len(list_items_after_update))
+        for product in new_grocery_items:
+            self.assertIn(product, list_items_after_update)
+
+    def test_03_create_empty_list(self):
         """
         This function tests the creation of an empty list.
         """

@@ -4,13 +4,11 @@ import sys
 import os
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-from models import Product, List, Base
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from models import List
-
 from DB.PsqlConnection import engine
+from models import Product, List, Base
 
 #do not show warnings
 warnings.filterwarnings("ignore")
@@ -55,17 +53,31 @@ def add_list(groceries_items, session=None):
 
     return new_list
 
-def edit_list(products_data, session=None):
+def add_products_to_list(list_id, products_list, session=None):
     Base.metadata.create_all(bind=engine)
     
     if session is None:
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
         session = SessionLocal()
     
-    # Get the list from the DB
+    # Fetch the list from the DB
+    list_to_update = session.query(List).filter(List.id == list_id).first()
+    print(list_to_update.id)
     
-    # Edit the list accordingly + change date
+    if list_to_update is None:
+        raise ValueError(f"List with id {list_id} does not exist.")
     
-    # 
+    # Add item/s to an existing list
+    new_products = set(products_list)
+    
+    for product in new_products:
+        if product not in list_to_update.products:
+            new_product = Product(item_name=product, list_id=list_to_update.id)
+            session.add(new_product)
+    
+    session.commit()
+    
+    return list_to_update
+            
 
 
