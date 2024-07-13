@@ -6,6 +6,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from services.product_service import *
+from services.list_service import *
 from models import Product, List, Base
 from DB.PsqlConnection import engine
 from datetime import datetime
@@ -49,7 +50,7 @@ class LearnTest(unittest.TestCase):
         # Define grocery items
         grocery_items = ["Eggs", "Chicken Breast", "Soy Milk"]
 
-        new_list=add_products(grocery_items, self.session)
+        new_list=add_list(grocery_items, self.session)
         
         # Assertions to ensure the list and products were created
         created_list = self.session.query(List).filter_by(id=new_list.id).one()
