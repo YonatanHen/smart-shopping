@@ -28,7 +28,6 @@ def lists_api():
     if request.method == 'GET':
         try:
             lists = get_lists()
-            print(lists)
             return jsonify(lists.to_dict(orient='records'))
         except Exception as e:
             return jsonify({'error': str(e)}), 500
