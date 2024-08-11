@@ -3,6 +3,8 @@ import warnings
 import sys
 import os
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from psycopg2 import errors
 from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -15,18 +17,26 @@ warnings.filterwarnings("ignore")
 
 def get_lists():
     Session = sessionmaker(bind=engine)
-    
     session = Session()
+    try:
+        res = session.query(List).all()
+        
+        list_data = pd.DataFrame([{
+            'list_id': item.id,
+            'date': item.date
+        } for item in res])
     
-    res = session.query(List).all()
-    
-    list_data = pd.DataFrame([{
-        'list_id': item.id,
-        'date': item.date
-    } for item in res])
-    
-    # Close the session
-    session.close()
+
+    except SQLAlchemyError as e:
+        if isinstance(e.orig,errors.UndefinedTable):
+            print(f"UndefinedTable error: {e}")
+            raise ValueError("List table does not exist") from e
+        else:
+            print(f"SQLAlchemy error: {e}")
+            raise ValueError("Database error occurred") from e
+    finally:
+        # Close the session
+        session.close()
     
     return list_data
 
@@ -62,7 +72,6 @@ def add_products_to_list(list_id, products_list, session=None):
     
     # Fetch the list from the DB
     list_to_update = session.query(List).filter(List.id == list_id).first()
-    print(list_to_update.id)
     
     if list_to_update is None:
         raise ValueError(f"List with id {list_id} does not exist.")
@@ -79,5 +88,7 @@ def add_products_to_list(list_id, products_list, session=None):
     
     return list_to_update
             
+    # def delete_list(list_id):
+        
 
 
