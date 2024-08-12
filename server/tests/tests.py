@@ -11,7 +11,7 @@ from models import List, Base
 from DB.PsqlConnection import engine
 from datetime import datetime
 
-class LearnTest(unittest.TestCase):
+class ListTest(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
@@ -93,6 +93,27 @@ class LearnTest(unittest.TestCase):
         created_list = self.session.query(List).filter_by(id=new_list.id).one()
         self.assertIsNotNone(created_list)
         self.assertEqual(created_list.products.count(), 0)
+    
+    def test_04_delete_list(self):
+        """
+        This function tests the deletion of a list.
+        """
+        new_list = List(date=datetime.now())
+
+        self.session.add(new_list)
+        self.session.commit()
+        
+        get_created_list = self.session.query(List).filter_by(id=new_list.id).all()
+        
+        self.assertNotEqual(get_created_list,[])
+        
+        self.session.query(List).filter(List.id == new_list.id).delete()
+        
+        self.session.commit()
+        
+        get_deleted_list = self.session.query(List).filter_by(id=new_list.id).all()
+
+        self.assertEqual(get_deleted_list,[])
     
 if __name__ == '__main__':
     unittest.main()
