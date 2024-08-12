@@ -1,17 +1,22 @@
-from flask import Flask, request, jsonify
 import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from services.list_service import add_list, get_lists, delete_list
 from services.product_service import get_all_products
-from services.list_service import add_list, get_lists
+from flask import Flask, request, jsonify
+
+
 
 app = Flask("Shopping list")
 app = Flask(__name__.split('.')[0])
 
+
 @app.route('/')
 def index_api():
     return 'Smart Shopping App'
+
 
 @app.route('/products', methods=['GET', 'POST', 'UPDATE'])
 def products_api():
@@ -23,7 +28,8 @@ def products_api():
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
-@app.route('/list', methods=['GET', 'POST', 'DELETE'])
+
+@app.route('/list', methods=['GET', 'POST'])
 def lists_api():
     if request.method == 'GET':
         try:
@@ -39,16 +45,17 @@ def lists_api():
         except Exception as e:
             error_message = str(e)
             return jsonify({'error': error_message}), 500
-    # elif request.method == 'DELETE':
-    #     try:
-    #         product_list_json = request.get_json()
-    #         delete_list(product_list_json['product_list'])
-    #         return jsonify(product_list_json)
-    #     except Exception as e:
-    #         error_message = str(e)
-    #         return jsonify({'error': error_message}), 500
 
-# TODO: Get list by id
+
+@app.route('/list/<int:id>', methods=['GET', 'DELETE'])
+def list_id_api(id):
+    if request.method == 'DELETE':
+        try:
+            deleted_list = delete_list(id)
+            return jsonify(deleted_list)
+        except Exception as e:
+            error_message = str(e)
+        return jsonify({'error': error_message}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
