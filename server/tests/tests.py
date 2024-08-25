@@ -98,22 +98,21 @@ class ListTest(unittest.TestCase):
         """
         This function tests the deletion of a list.
         """
-        new_list = List(date=datetime.now())
+        grocery_items = ["Eggs", "Chicken Breast", "Soy Milk"]
 
-        self.session.add(new_list)
-        self.session.commit()
+        new_list=add_list(grocery_items, self.session)
         
         get_created_list = self.session.query(List).filter_by(id=new_list.id).all()
         
         self.assertNotEqual(get_created_list,[])
         
-        self.session.query(List).filter(List.id == new_list.id).delete()
-        
-        self.session.commit()
-        
-        get_deleted_list = self.session.query(List).filter_by(id=new_list.id).all()
+        get_deleted_list = delete_list(new_list.id,self.session)
 
-        self.assertEqual(get_deleted_list,[])
+        # Check whether the deleted list has some content
+        self.assertNotEqual(get_deleted_list, [])
+        
+        # Check whether the list deleted
+        self.assertEqual(self.session.query(List).filter_by(id=new_list.id).all(), [])
     
 if __name__ == '__main__':
     unittest.main()
