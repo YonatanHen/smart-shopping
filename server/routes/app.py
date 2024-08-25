@@ -18,7 +18,7 @@ def index_api():
     return 'Smart Shopping App'
 
 
-@app.route('/products', methods=['GET', 'POST', 'UPDATE'])
+@app.route('/products', methods=['GET'])
 def products_api():
     if request.method == 'GET':
         try:
@@ -47,9 +47,13 @@ def lists_api():
             return jsonify({'error': error_message}), 500
 
 
-@app.route('/list/<int:id>', methods=['GET', 'DELETE'])
+@app.route('/list/<int:id>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
 def list_id_api(id):
-    if request.method == 'DELETE':
+    if request.method == 'PATCH':
+        return 'update list'
+    if request.method == 'PUT':
+        return 'update list'
+    elif request.method == 'DELETE':
         try:
             deleted_list = delete_list(id)
             return jsonify(deleted_list)
