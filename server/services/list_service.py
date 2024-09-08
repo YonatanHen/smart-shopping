@@ -70,13 +70,22 @@ def add_products_to_list(list_id, products_list, session=None):
         
         # Add item/s to an existing list
         new_products = set(products_list)
-        
+        print(list_to_update.products)
         for product in new_products:
             if product not in list_to_update.products:
                 new_product = Product(item_name=product, list_id=list_to_update.id)
                 session.add(new_product)
         
         session.commit()
+        
+        updated_list=session.query(List).filter(List.id == list_id).first()
+        list_data = {
+            "id": updated_list.id,
+            "date": updated_list.date.isoformat(),
+            "products": [p.item_name for p in updated_list.products]
+        }
+        return list_data
+        
     except SQLAlchemyError as e:
         handle_sqlalchemy_error(e)
     except ValueError as e:
@@ -85,13 +94,7 @@ def add_products_to_list(list_id, products_list, session=None):
         raise Exception("An unexpected error occurred") from e
     finally:
         if os.getenv("ENV")=="Production":
-            session.close()
-
-    return list_to_update
-
-def update_list(list_id, session=None):
-    pass
-
+            session.close()          
             
 def delete_list(list_id, session=None):
     try:

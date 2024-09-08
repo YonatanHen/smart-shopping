@@ -1,13 +1,10 @@
+from flask import Flask, request, jsonify
 import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from services.list_service import add_list, get_lists, delete_list
 from services.product_service import get_all_products
-from flask import Flask, request, jsonify
-
-
+from services.list_service import add_list, get_lists, delete_list, add_products_to_list
 
 app = Flask("Shopping list")
 app = Flask(__name__.split('.')[0])
@@ -37,6 +34,7 @@ def lists_api():
             return jsonify(lists.to_dict(orient='records'))
         except Exception as e:
             return jsonify({'error': str(e)}), 500
+
     elif request.method == 'POST':
         try:
             product_list_json = request.get_json()
@@ -50,9 +48,17 @@ def lists_api():
 @app.route('/list/<int:id>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
 def list_id_api(id):
     if request.method == 'PATCH':
-        return 'update list'
+        try:
+            product_list_json = request.get_json()
+            updated_list = add_products_to_list(id,product_list_json['product_list'])
+            return jsonify(updated_list)
+        except Exception as e:
+            error_message = str(e)
+            return jsonify({'error': error_message}), 500
+
     if request.method == 'PUT':
         return 'update list'
+
     elif request.method == 'DELETE':
         try:
             deleted_list = delete_list(id)
@@ -60,6 +66,7 @@ def list_id_api(id):
         except Exception as e:
             error_message = str(e)
         return jsonify({'error': error_message}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
