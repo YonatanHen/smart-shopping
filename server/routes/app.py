@@ -50,7 +50,7 @@ def list_id_api(id):
     if request.method == 'PATCH':
         try:
             product_list_json = request.get_json()
-            updated_list = add_products_to_list(id,product_list_json['product_list'])
+            updated_list = add_products_to_list(id,product_list_json)
             return jsonify(updated_list)
         except Exception as e:
             error_message = str(e)
