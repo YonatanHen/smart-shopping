@@ -4,4 +4,4 @@
 *.png
 testing/
 production/
-.vscode
+.vscode*
