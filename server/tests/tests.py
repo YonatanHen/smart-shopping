@@ -48,7 +48,7 @@ class ListTest(unittest.TestCase):
         This function tests the creation of a list with some products.
         """
         # Define grocery items
-        grocery_items = ["Eggs", "Chicken Breast", "Soy Milk"]
+        grocery_items = {"Eggs": 2, "Chicken Breast": 1, "Soy Milk": 4}
 
         new_list=add_list(grocery_items, self.session)
         
@@ -63,15 +63,15 @@ class ListTest(unittest.TestCase):
         """
         This function test an addition of products of an existing list.
         """
-        new_grocery_items = ["Bread", "Sugar"]
+        new_grocery_items = {"Bread": 2, "Sugar": 1}
         
         list_to_update = self.session.query(List).first()
                 
         updated_list = add_products_to_list(list_to_update.id, new_grocery_items,self.session)
+        list_id = updated_list['id']
+        list_after_update = self.session.query(List).filter_by(id=list_id).one()
         
-        list_after_update = self.session.query(List).filter_by(id=updated_list.id).one()
-        
-        list_items_after_update = [p.item_name for p in list_after_update.products]
+        list_items_after_update = {p.item_name: p.amount for p in list_after_update.products}
         
         print(f"list after update id is {list_after_update.id}, list products are: {list_items_after_update}")
         
@@ -98,7 +98,7 @@ class ListTest(unittest.TestCase):
         """
         This function tests the deletion of a list.
         """
-        grocery_items = ["Eggs", "Chicken Breast", "Soy Milk"]
+        grocery_items = {"Eggs": 1, "Chicken Breast": 1, "Soy Milk": 1}
 
         new_list=add_list(grocery_items, self.session)
         
