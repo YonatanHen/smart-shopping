@@ -10,6 +10,7 @@ class Product(Base):
     id = Column(Integer, primary_key=True, index=True)
     item_name = Column(String, index=True)
     list_id = Column(Integer, ForeignKey('lists.id'))
+    amount = Column(Integer, default=1)
     
 
 class List(Base):
