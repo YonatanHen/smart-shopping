@@ -19,26 +19,31 @@ def create_new_list():
     #Get last date when each item was purchased
     max_purchase_date = data.groupby(pd.Grouper(key='item_name')).date.max().reset_index(name='last_purchased')
 
-    frequency_of_items = data.groupby(pd.Grouper(key='item_name')).size().reset_index(name='count')
+    #Calculate the sum of amounts for each item
+    total_amount = data.groupby('item_name')['amount'].sum().reset_index(name='total_amount')
+    
+    #Calculate the average amount for each item
+    average_amount = data.groupby('item_name')['amount'].mean().reset_index(name='avg_amount')
 
     average_purchase_interval = data.groupby(pd.Grouper(key='item_name')).date.apply(lambda x: x.diff().mean()).reset_index(name='avg_interval')
 
-    df = pd.merge(max_purchase_date,frequency_of_items,on='item_name')
+    df = pd.merge(max_purchase_date,total_amount,on='item_name')
+    df = pd.merge(df, average_amount, on='item_name')
     df = pd.merge(df, average_purchase_interval, on='item_name')
 
-    df['count'].fillna(0, inplace=True)
+    df['total_amount'].fillna(0, inplace=True)
+    df['avg_amount'].fillna(0, inplace=True)
     df['avg_interval'].fillna(pd.Timedelta(seconds=0), inplace=True)
     
+     # Convert 'last_purchased' to seconds since Unix epoch for numerical representation
     df['last_purchased'] = pd.to_datetime(df['last_purchased'])
+    df['last_purchased'] = (df['last_purchased'] - pd.Timestamp("1970-01-01")) // pd.Timedelta('1s')
+    
     df['avg_interval'] = pd.to_timedelta(df['avg_interval']).dt.total_seconds()
-    df['last_purchased'] = pd.to_timedelta(df['avg_interval']).dt.total_seconds()
-
-    df['count'].fillna(0, inplace=True)
-    df['avg_interval'].fillna(0, inplace=True)
 
     print(df)
 
-    X = df[['count', 'avg_interval', 'last_purchased']]  # Features
+    X = df[['total_amount', 'avg_interval', 'avg_amount', 'last_purchased']]  # Features
     y = df['item_name']  # Target variable
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
@@ -49,3 +54,5 @@ def create_new_list():
 
     y_pred = dtc.predict(X_test)
     print(y_pred, len(y_pred))
+    
+create_new_list()
