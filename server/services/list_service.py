@@ -42,15 +42,19 @@ def add_list(groceries_items, session=None):
         new_list = List(date=datetime.now())
         session.add(new_list)
         session.commit()
-
-        for item in groceries_items:
-            new_product = Product(item_name=item, list_id=new_list.id)
+        #groceries_items is a dictionary where keys are item names and values are quantities
+        for item,amount in groceries_items.items():
+            if amount <= 0:
+                raise ValueError(f"Provided amount for item '{item}' is invalid. Amount should be greater than 0.")
+            new_product = Product(item_name=item, list_id=new_list.id, amount=int(amount))
             session.add(new_product)
         
         session.commit()
         return new_list
     except SQLAlchemyError as e:
         handle_sqlalchemy_error(e)
+    except ValueError as e:
+        raise
     except Exception as e:
         raise Exception("An unexpected error occurred") from e
     finally:

@@ -38,7 +38,7 @@ def lists_api():
     elif request.method == 'POST':
         try:
             product_list_json = request.get_json()
-            add_list(product_list_json['product_list'])
+            add_list(product_list_json)
             return jsonify(product_list_json)
         except Exception as e:
             error_message = str(e)
