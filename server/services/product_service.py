@@ -1,12 +1,12 @@
-from DB.PsqlConnection import engine
 import pandas as pd
 import warnings
 import sys
 import os
 from sqlalchemy.orm import sessionmaker
-from models import Product
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from DB.PsqlConnection import engine
+from models import Product
 
 
 # do not show warnings
@@ -23,7 +23,8 @@ def get_all_products():
     products_data = pd.DataFrame([{
         'product_id': item.id,
         'list': item.list_id,
-        'item_name': item.item_name
+        'item_name': item.item_name,
+        'amount': item.amount
     } for item in res])
 
     # Close the session

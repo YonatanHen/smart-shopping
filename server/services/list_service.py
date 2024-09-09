@@ -8,8 +8,8 @@ from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models import Product, List, Base
-from .utils.create_db_session import get_session
-from .utils.errors.sqlalchemy_error import handle_sqlalchemy_error
+from utils.create_db_session import get_session
+from utils.errors.sqlalchemy_error import handle_sqlalchemy_error
 from sqlalchemy.orm import sessionmaker
 from DB.PsqlConnection import engine
 #Do not show warnings
