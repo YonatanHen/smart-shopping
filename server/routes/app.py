@@ -26,7 +26,7 @@ def products_api():
             return jsonify({'error': error_message}), 500
 
 @app.route('/products/<int:id>', methods=['GET'])
-def products_list_api(list_id):
+def products_list_api(id):
     if request.method == 'GET':
         try:
             product_list = get_products_by_list_id(id)
