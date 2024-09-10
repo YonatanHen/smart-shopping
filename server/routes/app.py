@@ -25,6 +25,14 @@ def products_api():
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
+@app.route('/products/<int:id>', methods=['DELETE'])
+def products_api():
+    if request.method == 'DELETE':
+        try:
+            pass
+        except Exception as e:
+            error_message = str(e)
+            return jsonify({'error': error_message}), 500
 
 @app.route('/list', methods=['GET', 'POST'])
 def lists_api():
