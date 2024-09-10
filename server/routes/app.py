@@ -3,7 +3,7 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from services.product_service import get_all_products
+from services.product_service import get_all_products, delete_product, get_products_by_list_id
 from services.list_service import add_list, get_lists, delete_list, add_products_to_list
 
 app = Flask("Shopping list")
@@ -25,11 +25,21 @@ def products_api():
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
-@app.route('/products/<int:id>', methods=['DELETE'])
-def products_api():
+@app.route('/products/<int:id>', methods=['GET'])
+def products_list_api(list_id):
+    if request.method == 'GET':
+        try:
+            product_list = get_products_by_list_id(id)
+            return jsonify(product_list.to_dict(orient="records"))
+        except Exception as e:
+            error_message = str(e)
+            return jsonify({'error': error_message}), 500
+
+@app.route('/products/<string:product_name>/<int:id>', methods=['DELETE'])
+def products_name_id_api(product_name, id):
     if request.method == 'DELETE':
         try:
-            pass
+            updated_list = delete_product(product_name, id)
         except Exception as e:
             error_message = str(e)
             return jsonify({'error': error_message}), 500
