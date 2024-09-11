@@ -40,7 +40,6 @@ def products_name_id_api(product_name, id):
     if request.method == 'DELETE':
         try:
             updated_list = delete_product(product_name, id)
-            print(updated_list)
             if updated_list is None:
                 raise ValueError('Product not found')
             return jsonify(updated_list.to_dict(orient='records'))

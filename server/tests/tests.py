@@ -113,6 +113,31 @@ class ListTest(unittest.TestCase):
         
         # Check whether the list deleted
         self.assertEqual(self.session.query(List).filter_by(id=new_list.id).all(), [])
+        
+    def test_05_delete_product(self):
+        """
+        This function tests the deletion of a product from a list.
+        """
+        grocery_items = {"Eggs": 1, "Chicken Breast": 4, "Soy Milk": 6}
+        
+        new_list=add_list(grocery_items, self.session)
+            
+        list_after_delete = delete_product("Eggs", new_list.id, self.session)
+        
+        list_records = list_after_delete.to_dict(orient="records")
+        
+        # Extract item names from the list of dictionaries
+        products_after_delete = {p['item_name'] for p in list_records}
+
+        self.assertNotIn("Eggs", products_after_delete)
+        
+        self.assertIn("Chicken Breast", products_after_delete)
+        
+        list_after_delete = delete_product("Eggs", new_list.id, self.session)
+        
+        #Check whether the function returns None (as expected) if the product does not exist
+        self.assertIsNone(list_after_delete)
+        
     
 if __name__ == '__main__':
     unittest.main()
