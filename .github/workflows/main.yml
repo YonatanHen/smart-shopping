@@ -70,7 +70,7 @@ jobs:
         # Add any commands needed to set up your database, such as running migrations
         echo "Database setup step (optional)."
 
-    - name: Test with pytest
+    - name: Test with unittest
       run: |
         # Run your tests
         python -m unittest ./server/tests/tests.py
