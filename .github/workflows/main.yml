@@ -13,12 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     environment: testing
 
+    env:
+      PSQL_USERNAME: ${{ secrets.PSQL_USERNAME }}
+      PSQL_PASSWORD: ${{ secrets.PSQL_PASSWORD }}
+      PSQL_URL: localhost:5432/testing 
+
     services:
       postgres:
         image: postgres
         env:
-          POSTGRES_USER: ${{ secrets.PSQL_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.PSQL_PASSWORD }}
+          POSTGRES_USER: ${{ env.PSQL_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.PSQL_PASSWORD }}
         ports:
           - 5432:5432
 
@@ -32,7 +37,6 @@ jobs:
 
     - name: Install dependencies
       run: |
-        echo ${{ env.PSQL_URL }}
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
