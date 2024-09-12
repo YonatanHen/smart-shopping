@@ -35,16 +35,16 @@ jobs:
       with:
         python-version: "3.12"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Wait for PostgreSQL to be ready
       run: |
         docker ps
         i=0
-        until docker exec pg_isready -U postgres || [ $i -ge 5 ]; do
+        until pg_isready -U postgres || [ $i -ge 5 ]; do
           echo "Waiting for PostgreSQL to be ready... ($i/25)"
           i=$((i+1))
           sleep 5
