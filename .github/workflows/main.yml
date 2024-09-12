@@ -43,10 +43,18 @@ jobs:
     - name: Wait for PostgreSQL to be ready
       run: |
         docker ps
-        until docker exec smart-shopping-psql pg_isready -U postgres; do
-          echo "Waiting for PostgreSQL to be ready..."
+        i=0
+        until docker exec pg_isready -U postgres || [ $i -ge 5 ]; do
+          echo "Waiting for PostgreSQL to be ready... ($i/25)"
+          i=$((i+1))
           sleep 5
         done
+
+        # If we reached the limit, exit with an error
+        if [ $i -ge 5 ]; then
+          echo "PostgreSQL did not become ready in time. Exiting..."
+          exit 1
+        fi
 
     - name: Run migrations or set up the database
       run: |
