@@ -44,7 +44,9 @@ jobs:
       run: |
         docker ps
         i=0
-        until pg_isready -U postgres || [ $i -ge 25 ]; do
+        # Get the container name of the PostgreSQL service
+        container_name=$(docker ps --filter "ancestor=postgres" --format "{{.Names}}")
+        until docker exec "$container_name" pg_isready -U postgres || [ $i -ge 25 ]; do
           echo "Waiting for PostgreSQL to be ready... ($i/25)"
           i=$((i+1))
           sleep 5
