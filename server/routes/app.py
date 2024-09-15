@@ -5,6 +5,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from services.product_service import get_all_products, delete_product, get_products_by_list_id
 from services.list_service import add_list, get_lists, delete_list, add_products_to_list
+from services.utils.calculate_list import calculate_new_list
 
 app = Flask("Shopping list")
 app = Flask(__name__.split('.')[0])
@@ -87,7 +88,16 @@ def list_id_api(id):
             return jsonify(deleted_list)
         except Exception as e:
             error_message = str(e)
-        return jsonify({'error': error_message}), 500
+            return jsonify({'error': error_message}), 500
+    
+@app.route('/list/suggest/<int:precision>', methods=['GET'])
+def suggest_list_api(precision):
+    try:
+        calculate_new_list(precision)
+        return "Calculated list"
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({'error': error_message}), 500       
 
 
 if __name__ == '__main__':

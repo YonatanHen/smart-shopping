@@ -6,13 +6,16 @@ from sklearn.tree import DecisionTreeClassifier
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from product_service import get_all_products
-from list_service import get_lists
+from ..product_service import get_all_products
+from ..list_service import get_lists
 
 
-def create_new_list():
+def calculate_new_list(precision=0.5):
     products_data = get_all_products()
     lists_data = get_lists()
+    
+    if len(products_data) == 0 or len(lists_data)==0:
+        return None
     
     data = pd.merge(products_data, lists_data, left_on='list', right_on='list_id')
     
@@ -41,18 +44,22 @@ def create_new_list():
     
     df['avg_interval'] = pd.to_timedelta(df['avg_interval']).dt.total_seconds()
 
-    print(df)
-
     X = df[['total_amount', 'avg_interval', 'avg_amount', 'last_purchased']]  # Features
     y = df['item_name']  # Target variable
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=precision, random_state=42)
 
     dtc = DecisionTreeClassifier()
 
     dtc.fit(X_train, y_train)
-
     y_pred = dtc.predict(X_test)
-    print(y_pred, len(y_pred))
     
-create_new_list()
+    res = []
+    for index, row in df.iterrows():
+        if row['item_name'] in y_pred:
+            res.append({
+                'item_name': row['item_name'],
+                'amount': round(row['avg_amount'])
+            })
+    print(res)
+    return res

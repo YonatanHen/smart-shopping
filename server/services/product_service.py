@@ -3,7 +3,6 @@ import warnings
 import sys
 import os
 from sqlalchemy import func, and_
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
