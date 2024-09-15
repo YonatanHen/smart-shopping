@@ -138,6 +138,24 @@ class ListTest(unittest.TestCase):
         #Check whether the function returns None (as expected) if the product does not exist
         self.assertIsNone(list_after_delete)
         
+    def test_06_create_list_with_duplicated_products(self):
+        """
+        This function tests the creation of a list with duplicated products.
+        According to limitations in Python, dictionary with duplicated keys will not be processed and only the last key will be kept.
+        """
+        # Define grocery items
+        grocery_items = {"Eggs": 2, "Eggs": 1, "Soy Milk": 4}
+
+        new_list=add_list(grocery_items, self.session)
+        
+        # Assertions to ensure the list and products were created
+        created_list = self.session.query(List).filter_by(id=new_list.id).one()
+        print({p.item_name: p.amount for p in created_list.products})
+        self.assertIsNotNone(created_list)
+        self.assertEqual(created_list.products.count(), len(grocery_items))
+        for product in created_list.products:
+            self.assertIn(product.item_name, grocery_items)
+        
     
 if __name__ == '__main__':
     unittest.main()

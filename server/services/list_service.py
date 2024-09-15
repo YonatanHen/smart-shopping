@@ -40,7 +40,6 @@ def add_list(groceries_items, session=None):
     try:
         if session is None:
             session = get_session()
-            
         new_list = List(date=datetime.now())
         session.add(new_list)
         session.commit()
