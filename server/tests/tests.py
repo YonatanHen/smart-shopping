@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from services.product_service import *
 from services.list_service import *
+from services.utils.calculate_list import *
 from models import List, Base
 from DB.PsqlConnection import engine
 from datetime import datetime
@@ -73,7 +74,7 @@ class ListTest(unittest.TestCase):
         
         list_items_after_update = {p.item_name: p.amount for p in list_after_update.products}
         
-        print(f"list after update id is {list_after_update.id}, list products are: {list_items_after_update}")
+        print(f"Test #2: list after update id is {list_after_update.id}, list products are: {list_items_after_update}\n")
         
         self.assertIsNotNone(list_after_update)
         self.assertEqual(list_after_update.products.count(), len(list_items_after_update))
@@ -150,12 +151,30 @@ class ListTest(unittest.TestCase):
         
         # Assertions to ensure the list and products were created
         created_list = self.session.query(List).filter_by(id=new_list.id).one()
-        print({p.item_name: p.amount for p in created_list.products})
+        
+        print(f"Test #6: Created list: {{p.item_name: p.amount for p in created_list.products}}\n")
+        
         self.assertIsNotNone(created_list)
         self.assertEqual(created_list.products.count(), len(grocery_items))
         for product in created_list.products:
             self.assertIn(product.item_name, grocery_items)
+            
+    def test_07_suggest_list(self):
+        """
+        This function tests the suggestion of a list based on the user's shopping history. 
+        """
+        add_list({"Eggs": 1, "Chicken Breast": 4, "Soy Milk": 6, "Sugar": 1, "Salt": 1, "Apples": 10}, self.session)
+        add_list({"Milk": 2, "Eggs": 1, "Bread": 1, "Chicken Breast": 2}, self.session)
         
-    
+        suggested_list_1 = calculate_new_list()
+        suggested_list_2 = calculate_new_list(0.4)
+        
+        print(f"Test #7: Suggested list 1: {suggested_list_1}\n")
+        print(f"Test #7: Suggested list 2: {suggested_list_2}\n")
+        
+        self.assertIsNotNone(suggested_list_1)
+        self.assertIsNotNone(suggested_list_2)
+        self.assertNotEqual(str(suggested_list_1), str(suggested_list_2))
+        
 if __name__ == '__main__':
     unittest.main()
