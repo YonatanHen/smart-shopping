@@ -10,7 +10,7 @@ from ..product_service import get_all_products
 from ..list_service import get_lists
 
 
-def calculate_new_list(precision=0.5):
+def calculate_new_list(test_set=0.3):
     products_data = get_all_products()
     lists_data = get_lists()
     
@@ -34,11 +34,11 @@ def calculate_new_list(precision=0.5):
     df = pd.merge(df, average_amount, on='item_name')
     df = pd.merge(df, average_purchase_interval, on='item_name')
 
-    df['total_amount'].fillna(0, inplace=True)
-    df['avg_amount'].fillna(0, inplace=True)
-    df['avg_interval'].fillna(pd.Timedelta(seconds=0), inplace=True)
-    
-     # Convert 'last_purchased' to seconds since Unix epoch for numerical representation
+    df['total_amount'] = df['total_amount'].fillna(0)
+    df['avg_amount'] = df['avg_amount'].fillna(0)
+    df['avg_interval'] = df['avg_interval'].fillna(pd.Timedelta(seconds=0))
+
+    # Convert 'last_purchased' to seconds since Unix epoch for numerical representation
     df['last_purchased'] = pd.to_datetime(df['last_purchased'])
     df['last_purchased'] = (df['last_purchased'] - pd.Timestamp("1970-01-01")) // pd.Timedelta('1s')
     
@@ -47,7 +47,7 @@ def calculate_new_list(precision=0.5):
     X = df[['total_amount', 'avg_interval', 'avg_amount', 'last_purchased']]  # Features
     y = df['item_name']  # Target variable
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=precision, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_set, random_state=42)
 
     dtc = DecisionTreeClassifier()
 

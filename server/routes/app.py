@@ -90,10 +90,10 @@ def list_id_api(id):
             error_message = str(e)
             return jsonify({'error': error_message}), 500
     
-@app.route('/list/suggest/<int:precision>', methods=['GET'])
-def suggest_list_api(precision):
+@app.route('/list/suggest/', methods=['GET'])
+def suggest_list_api():
     try:
-        return calculate_new_list(precision)
+        return calculate_new_list()
     except Exception as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 500       
