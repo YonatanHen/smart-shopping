@@ -61,5 +61,5 @@ def calculate_new_list(precision=0.5):
                 'item_name': row['item_name'],
                 'amount': round(row['avg_amount'])
             })
-    print(res)
+
     return res

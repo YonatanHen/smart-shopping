@@ -93,12 +93,10 @@ def list_id_api(id):
 @app.route('/list/suggest/<int:precision>', methods=['GET'])
 def suggest_list_api(precision):
     try:
-        calculate_new_list(precision)
-        return "Calculated list"
+        return calculate_new_list(precision)
     except Exception as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 500       
-
 
 if __name__ == '__main__':
     app.run(debug=True)
