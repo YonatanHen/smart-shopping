@@ -1,7 +1,3 @@
-# This workflow will install Python dependencies, set up PostgreSQL in Docker, and run tests and lint with a single version of Python
-
-name: Python application
-
 on:
   push:
     branches: [ "main","ci/cd" ]
