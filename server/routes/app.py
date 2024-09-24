@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import sys
 import os
 
@@ -9,7 +10,7 @@ from services.utils.calculate_list import calculate_new_list
 
 app = Flask("Shopping list")
 app = Flask(__name__.split('.')[0])
-
+CORS(app)
 
 @app.route('/')
 def index_api():
