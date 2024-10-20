@@ -23,7 +23,6 @@ function ListTable() {
 
     return (
         <div className="list-table">
-            {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -35,6 +34,17 @@ function ListTable() {
                     </tr>
                 </thead>
                 <tbody>
+                    {data.map((row, idx) => {
+                        return (
+                            <tr>
+                                <td>{row.list}</td>
+                                <td>{idx+1}</td>
+                                <td>{row.item_name}</td>
+                                <td>{row.amount}</td>
+                                <td>{"10-10-2024"}</td>
+                            </tr>
+                        )
+                    })}
                     <tr>
                     </tr>
                 </tbody>
