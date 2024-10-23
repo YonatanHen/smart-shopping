@@ -5,6 +5,7 @@
 testing/
 production/
 .vscode
+.env
 
 # dependencies
 client/node_modules

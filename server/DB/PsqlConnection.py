@@ -1,10 +1,13 @@
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from models import Base
 
-PSQL_USERNAME=os.environ.get('PSQL_USERNAME')
-PSQL_PASSWORD=os.environ.get('PSQL_PASSWORD')
-PSQL_URL=os.environ.get('PSQL_URL')
+load_dotenv()
+
+PSQL_USERNAME=os.getenv('PSQL_USERNAME')
+PSQL_PASSWORD=os.getenv('PSQL_PASSWORD')
+PSQL_URL=os.getenv('PSQL_URL')
 
 engine = create_engine(f"postgresql://{PSQL_USERNAME}:{PSQL_PASSWORD}@{PSQL_URL}")
 Base.metadata.create_all(bind=engine)
