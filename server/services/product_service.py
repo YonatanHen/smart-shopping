@@ -24,7 +24,8 @@ def get_all_products():
         'product_id': item.id,
         'list': item.list_id,
         'item_name': item.item_name,
-        'amount': item.amount
+        'amount': item.amount,
+        'date_added': item.list.date
     } for item in res])
 
     # Close the session
@@ -42,7 +43,8 @@ def get_products_by_list_id(list_id, session=None):
 
         products_data = pd.DataFrame([{
             'item_name': item.item_name,
-            'amount': item.amount
+            'amount': item.amount,
+            'date_added': item.list.date
         } for item in res])
 
     except SQLAlchemyError as e:
