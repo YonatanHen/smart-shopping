@@ -26,22 +26,22 @@ function ListTable() {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>List #</th>
                         <th>#</th>
+                        <th>List ID</th>
                         <th>Item Name</th>
                         <th>Amount</th>
                         <th>Date Added</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((row, idx) => {
+                    {data.map((product, idx) => {
                         return (
                             <tr>
-                                <td>{row.list}</td>
                                 <td>{idx+1}</td>
-                                <td>{row.item_name}</td>
-                                <td>{row.amount}</td>
-                                <td>{"10-10-2024"}</td>
+                                <td>{product.list}</td>
+                                <td>{product.item_name}</td>
+                                <td>{product.amount}</td>
+                                <td>{product.date_added}</td>
                             </tr>
                         )
                     })}
