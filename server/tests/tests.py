@@ -22,6 +22,7 @@ class ListTest(unittest.TestCase):
         Base.metadata.create_all(bind=engine)
         cls.Session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
     
+    
     @classmethod
     def tearDownClass(cls):
         """
@@ -30,11 +31,13 @@ class ListTest(unittest.TestCase):
         Base.metadata.drop_all(bind=engine)
         cls.Session.remove()
         
+        
     def setUp(self):
         """
         Method called to prepare the DB session for test fixture.
         """
         self.session = self.Session()
+        
         
     def tearDown(self):
         """
@@ -43,6 +46,7 @@ class ListTest(unittest.TestCase):
         """
         self.session.rollback()
         self.session.close()
+        
         
     def test_01_create_list(self):
         """
@@ -59,6 +63,7 @@ class ListTest(unittest.TestCase):
         self.assertEqual(created_list.products.count(), len(grocery_items))
         for product in created_list.products:
             self.assertIn(product.item_name, grocery_items)
+            
             
     def test_02_update_product_in_list(self):
         """
@@ -81,6 +86,7 @@ class ListTest(unittest.TestCase):
         for product in new_grocery_items:
             self.assertIn(product, list_items_after_update)
 
+
     def test_03_create_empty_list(self):
         """
         This function tests the creation of an empty list.
@@ -94,6 +100,7 @@ class ListTest(unittest.TestCase):
         created_list = self.session.query(List).filter_by(id=new_list.id).one()
         self.assertIsNotNone(created_list)
         self.assertEqual(created_list.products.count(), 0)
+    
     
     def test_04_delete_list(self):
         """
@@ -115,6 +122,7 @@ class ListTest(unittest.TestCase):
         # Check whether the list deleted
         self.assertEqual(self.session.query(List).filter_by(id=new_list.id).all(), [])
         
+        
     def test_05_delete_product(self):
         """
         This function tests the deletion of a product from a list.
@@ -122,8 +130,12 @@ class ListTest(unittest.TestCase):
         grocery_items = {"Eggs": 1, "Chicken Breast": 4, "Soy Milk": 6}
         
         new_list=add_list(grocery_items, self.session)
-            
-        list_after_delete = delete_product("Eggs", new_list.id, self.session)
+        
+        deleted_product = delete_product("Eggs", new_list.id, self.session)
+                    
+        self.assertIsNotNone(deleted_product)    
+        
+        list_after_delete = get_products_by_list_id(new_list.id, self.session)
         
         list_records = list_after_delete.to_dict(orient="records")
         
@@ -134,10 +146,11 @@ class ListTest(unittest.TestCase):
         
         self.assertIn("Chicken Breast", products_after_delete)
         
-        list_after_delete = delete_product("Eggs", new_list.id, self.session)
+        delete_product_2 = delete_product("Eggs", new_list.id, self.session)
         
         #Check whether the function returns None (as expected) if the product does not exist
-        self.assertIsNone(list_after_delete)
+        self.assertIsNone(delete_product_2)
+        
         
     def test_06_create_list_with_duplicated_products(self):
         """
@@ -159,6 +172,7 @@ class ListTest(unittest.TestCase):
         for product in created_list.products:
             self.assertIn(product.item_name, grocery_items)
             
+            
     def test_07_suggest_list(self):
         """
         This function tests the suggestion of a list based on the user's shopping history. 
@@ -175,6 +189,23 @@ class ListTest(unittest.TestCase):
         self.assertIsNotNone(suggested_list_1)
         self.assertIsNotNone(suggested_list_2)
         self.assertNotEqual(str(suggested_list_1), str(suggested_list_2))
+        
+        
+    def test_08_update_product(self):
+        """
+        This function tests the update of a product in a list
+        """
+        grocery_items = {"Eggs": 2, "Bread": 1, "Soy Milk": 4}
+
+        new_list = add_list(grocery_items, self.session)
+        
+        new_product_data = {"item_name": "Eggplant", "amount": 1}
+         
+        updated_product = update_product("Eggs", new_list.id, new_product_data ,self.session)
+        
+        self.assertIsNotNone(updated_product)
+        self.assertEqual(updated_product.item_name, "Eggplant")
+        self.assertEqual(updated_product.amount, 1)
         
 if __name__ == '__main__':
     unittest.main()
