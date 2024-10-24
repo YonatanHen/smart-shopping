@@ -65,7 +65,7 @@ class ListTest(unittest.TestCase):
             self.assertIn(product.item_name, grocery_items)
             
             
-    def test_02_update_product_in_list(self):
+    def test_02_add_products_to_list(self):
         """
         This function test an addition of products of an existing list.
         """
