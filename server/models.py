@@ -12,6 +12,8 @@ class Product(Base):
     list_id = Column(Integer, ForeignKey('lists.id'))
     amount = Column(Integer, default=1)
     
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
 
 class List(Base):
     __tablename__ = "lists"

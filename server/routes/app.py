@@ -4,7 +4,7 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from services.product_service import get_all_products, delete_product, get_products_by_list_id
+from services.product_service import get_all_products, delete_product, get_products_by_list_id, update_product
 from services.list_service import add_list, get_lists, delete_list, add_products_to_list
 from services.utils.calculate_list import calculate_new_list
 
@@ -17,7 +17,7 @@ def index_api():
     return 'Smart Shopping App'
 
 
-@app.route('/products', methods=['GET'])
+@app.route('/product', methods=['GET'])
 def products_api():
     if request.method == 'GET':
         try:
@@ -27,7 +27,8 @@ def products_api():
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
-@app.route('/products/<int:id>', methods=['GET'])
+
+@app.route('/product/<int:id>', methods=['GET'])
 def products_list_api(id):
     if request.method == 'GET':
         try:
@@ -37,18 +38,38 @@ def products_list_api(id):
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
-@app.route('/products/<string:product_name>/<int:id>', methods=['DELETE'])
-def products_name_id_api(product_name, id):
+
+@app.route('/list/<int:list_id>/product/<string:product_name>', methods=['DELETE', 'PUT'])
+def list_id_product_name_api(list_id, product_name):
     if request.method == 'DELETE':
         try:
-            updated_list = delete_product(product_name, id)
-            if updated_list is None:
+            deleted_product = delete_product(product_name, list_id)
+            
+            if deleted_product is None:
                 raise ValueError('Product not found')
-            return jsonify(updated_list.to_dict(orient='records'))
+            
+            return jsonify(deleted_product)
+        
         except ValueError as e:
             return jsonify({'error': str(e)}), 404
         except Exception as e:
             return jsonify({'error': str(e)}), 500
+        
+    elif request.method == 'PUT':
+        try:
+            product_data = request.get_json()
+            updated_product = update_product(product_name, list_id, product_data)
+            
+            if updated_product is None:
+                raise ValueError('Product not found')
+            
+            return jsonify(updated_product)
+        
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 404
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
 
 @app.route('/list', methods=['GET', 'POST'])
 def lists_api():
@@ -69,7 +90,7 @@ def lists_api():
             return jsonify({'error': error_message}), 500
 
 
-@app.route('/list/<int:id>', methods=['GET', 'PATCH', 'PUT', 'DELETE'])
+@app.route('/list/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
 def list_id_api(id):
     if request.method == 'PATCH':
         try:
@@ -80,9 +101,6 @@ def list_id_api(id):
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
-    if request.method == 'PUT':
-        return 'update list'
-
     elif request.method == 'DELETE':
         try:
             deleted_list = delete_list(id)
@@ -91,6 +109,7 @@ def list_id_api(id):
             error_message = str(e)
             return jsonify({'error': error_message}), 500
     
+    
 @app.route('/list/suggest/', methods=['GET'])
 def suggest_list_api():
     try:
@@ -98,6 +117,7 @@ def suggest_list_api():
     except Exception as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 500       
+
 
 if __name__ == '__main__':
     app.run(debug=True)
