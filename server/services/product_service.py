@@ -77,7 +77,6 @@ def delete_product(product_name, list_id, session=None):
         session.commit()
         
         updated_list = get_products_by_list_id(list_id, session)
-        return updated_list
     
     except ValueError as e:
         raise
@@ -89,5 +88,45 @@ def delete_product(product_name, list_id, session=None):
     finally:
         if os.getenv("ENV") == "Production":
             session.close()
+        
+        return updated_list
+
+            
+def update_product(product_name, list_id, updated_product_data, session=None):
+        try:
+            if session is None:
+                session = get_session()
+
+            product_to_update = session.query(Product).filter(
+                and_(
+                    list_id == Product.list_id,
+                    func.lower(product_name) == func.lower(Product.item_name)
+                )
+            ).first()
+
+            if product_to_update is None:
+                return None
+            
+            for field, value in updated_product_data.items():
+                if value is not None:
+                    setattr(product_to_update, field, value)
+
+            session.commit()
+            
+            updated_list = get_products_by_list_id(list_id, session)
+    
+        except ValueError as e:
+            raise
+        except SQLAlchemyError as e:
+            handle_sqlalchemy_error(e)
+        except Exception as e:
+            raise Exception("An unexpected error occurred") from e
+
+        finally:
+            if os.getenv("ENV") == "Production":
+                session.close()
+        
+            return updated_list
+
 
         
