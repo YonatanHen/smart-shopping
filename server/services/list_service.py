@@ -32,7 +32,8 @@ def get_lists(session=None):
         session.rollback()
         raise Exception("An unexpected error occurred") from e
     finally:
-        session.close()
+        if os.getenv("ENV")=="Production":
+            session.close()
 
 def add_list(groceries_items, session=None):
     try:
@@ -60,7 +61,8 @@ def add_list(groceries_items, session=None):
         session.rollback()
         raise Exception("An unexpected error occurred") from e
     finally:
-        session.close()
+        if os.getenv("ENV")=="Production":
+            session.close()
 
 def add_products_to_list(list_id, groceries_items, session=None):    
     try:
@@ -101,7 +103,8 @@ def add_products_to_list(list_id, groceries_items, session=None):
         session.rollback()
         raise Exception("An unexpected error occurred") from e
     finally:
-        session.close()          
+        if os.getenv("ENV")=="Production":
+            session.close()          
             
 def delete_list(list_id, session=None):
     try:
@@ -133,6 +136,7 @@ def delete_list(list_id, session=None):
         session.rollback()
         raise Exception("An unexpected error occurred") from e
     finally:
-        session.close()
+        if os.getenv("ENV")=="Production":
+            session.close()
         
         return deleted_list
