@@ -204,8 +204,8 @@ class ListTest(unittest.TestCase):
         updated_product = update_product("Eggs", new_list.id, new_product_data ,self.session)
         
         self.assertIsNotNone(updated_product)
-        self.assertEqual(updated_product.item_name, "Eggplant")
-        self.assertEqual(updated_product.amount, 1)
+        self.assertEqual(updated_product['item_name'], "Eggplant")
+        self.assertEqual(updated_product['amount'], 1)
         
 if __name__ == '__main__':
     unittest.main()

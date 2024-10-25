@@ -50,7 +50,9 @@ def delete_product(product_name, list_id, session=None):
 
         session.delete(product_to_delete)
         session.commit()
-                
+        
+        return product_to_delete.to_dict()
+
     except ValueError as e:
         raise
     except SQLAlchemyError as e:
@@ -61,9 +63,7 @@ def delete_product(product_name, list_id, session=None):
     finally:
         if os.getenv("ENV") == "Production":
             session.close()
-    
-        return product_to_delete.to_dict()
-
+            
             
 def update_product(product_name, list_id, updated_product_data, session=None):
         try:
@@ -85,6 +85,8 @@ def update_product(product_name, list_id, updated_product_data, session=None):
                     setattr(product_to_update, field, value)
 
             session.commit()
+            
+            return product_to_update.to_dict()
                 
         except ValueError as e:
             raise
@@ -97,7 +99,6 @@ def update_product(product_name, list_id, updated_product_data, session=None):
             if os.getenv("ENV") == "Production":
                 session.close()
         
-            return product_to_update.to_dict()
 
 
         
