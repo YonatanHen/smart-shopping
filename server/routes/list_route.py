@@ -1,34 +1,34 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Blueprint, request, jsonify
 import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from services.product_service import get_all_products, delete_product, get_products_by_list_id, update_product
+from services.product_service import delete_product, get_products_by_list_id, update_product
 from services.list_service import add_list, get_lists, delete_list, add_products_to_list
 from services.utils.calculate_list import calculate_new_list
 
-app = Flask("Shopping list")
-app = Flask(__name__.split('.')[0])
-CORS(app)
+list_bp = Blueprint('list',__name__,url_prefix='list')
 
-@app.route('/')
-def index_api():
-    return 'Smart Shopping App'
-
-
-@app.route('/product', methods=['GET'])
-def products_api():
+@list_bp.route('/', methods=['GET', 'POST'])
+def lists_api():
     if request.method == 'GET':
         try:
-            product_list = get_all_products()
-            return jsonify(product_list.to_dict(orient="records"))
+            lists = get_lists()
+            return jsonify(lists.to_dict(orient='records'))
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    elif request.method == 'POST':
+        try:
+            product_list_json = request.get_json()
+            add_list(product_list_json)
+            return jsonify(product_list_json)
         except Exception as e:
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
 
-@app.route('/product/<int:id>', methods=['GET'])
+@list_bp.route('/<int:id>/product', methods=['GET'])
 def products_list_api(id):
     if request.method == 'GET':
         try:
@@ -39,7 +39,7 @@ def products_list_api(id):
             return jsonify({'error': error_message}), 500
 
 
-@app.route('/list/<int:list_id>/product/<string:product_name>', methods=['DELETE', 'PUT'])
+@list_bp.route('/<int:list_id>/product/<string:product_name>', methods=['DELETE', 'PUT'])
 def list_id_product_name_api(list_id, product_name):
     if request.method == 'DELETE':
         try:
@@ -71,26 +71,7 @@ def list_id_product_name_api(list_id, product_name):
             return jsonify({'error': str(e)}), 500
 
 
-@app.route('/list', methods=['GET', 'POST'])
-def lists_api():
-    if request.method == 'GET':
-        try:
-            lists = get_lists()
-            return jsonify(lists.to_dict(orient='records'))
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-
-    elif request.method == 'POST':
-        try:
-            product_list_json = request.get_json()
-            add_list(product_list_json)
-            return jsonify(product_list_json)
-        except Exception as e:
-            error_message = str(e)
-            return jsonify({'error': error_message}), 500
-
-
-@app.route('/list/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
+@list_bp.route('/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
 def list_id_api(id):
     if request.method == 'PATCH':
         try:
@@ -110,14 +91,10 @@ def list_id_api(id):
             return jsonify({'error': error_message}), 500
     
     
-@app.route('/list/suggest/', methods=['GET'])
+@list_bp.route('/suggest', methods=['GET'])
 def suggest_list_api():
     try:
         return calculate_new_list()
     except Exception as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 500       
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
