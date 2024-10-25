@@ -18,7 +18,7 @@ def products_api():
             error_message = str(e)
             return jsonify({'error': error_message}), 500
 
-@product_bp.route('<string:product_name>/list/<int:list_id>', methods=['DELETE', 'PUT'])
+@product_bp.route('/<string:product_name>/list/<int:list_id>', methods=['DELETE', 'PUT'])
 def list_id_product_name_api(product_name,list_id):
     if request.method == 'DELETE':
         try:
