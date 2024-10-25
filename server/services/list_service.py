@@ -14,6 +14,7 @@ from .utils.errors.sqlalchemy_error import handle_sqlalchemy_error
 #Do not show warnings
 warnings.filterwarnings("ignore")
 
+
 def get_lists(session=None):
     try:
         if session is None:
@@ -34,6 +35,7 @@ def get_lists(session=None):
     finally:
         if os.getenv("ENV")=="Production":
             session.close()
+
 
 def add_list(groceries_items, session=None):
     try:
@@ -63,6 +65,7 @@ def add_list(groceries_items, session=None):
     finally:
         if os.getenv("ENV")=="Production":
             session.close()
+
 
 def add_products_to_list(list_id, groceries_items, session=None):    
     try:
@@ -105,6 +108,7 @@ def add_products_to_list(list_id, groceries_items, session=None):
     finally:
         if os.getenv("ENV")=="Production":
             session.close()          
+  
             
 def delete_list(list_id, session=None):
     try:
@@ -140,3 +144,27 @@ def delete_list(list_id, session=None):
             session.close()
         
         return deleted_list
+    
+    
+def get_products_by_list_id(list_id, session=None):
+    try:
+        if session is None:
+            session = get_session()
+
+        res = session.query(Product).filter_by(list_id=list_id).all()
+
+        products_data = pd.DataFrame([{
+            'item_name': item.item_name,
+            'amount': item.amount,
+            'date_added': item.list.date
+        } for item in res])
+
+    except SQLAlchemyError as e:
+        handle_sqlalchemy_error(e)
+    except Exception as e:
+        raise Exception("An unexpected error occurred") from e
+    finally:
+        if os.getenv("ENV") == "Production":
+            session.close()
+
+        return products_data

@@ -33,31 +33,6 @@ def get_all_products():
 
     return products_data
 
-
-def get_products_by_list_id(list_id, session=None):
-    try:
-        if session is None:
-            session = get_session()
-
-        res = session.query(Product).filter_by(list_id=list_id).all()
-
-        products_data = pd.DataFrame([{
-            'item_name': item.item_name,
-            'amount': item.amount,
-            'date_added': item.list.date
-        } for item in res])
-
-    except SQLAlchemyError as e:
-        handle_sqlalchemy_error(e)
-    except Exception as e:
-        raise Exception("An unexpected error occurred") from e
-    finally:
-        if os.getenv("ENV") == "Production":
-            session.close()
-
-        return products_data
-
-
 def delete_product(product_name, list_id, session=None):
     try:
         if session is None:
