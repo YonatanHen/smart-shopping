@@ -6,7 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from services.product_service import get_all_products, delete_product, update_product
 
 
-product_bp = Blueprint('product',__name__,url_prefix='product')
+product_bp = Blueprint('product',__name__,url_prefix='/product')
 
 @product_bp.route('/', methods=['GET'])
 def products_api():

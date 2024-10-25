@@ -6,7 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from services.list_service import add_list, get_lists, get_products_by_list_id, delete_list, add_products_to_list
 from services.utils.calculate_list import calculate_new_list
 
-list_bp = Blueprint('list',__name__,url_prefix='list')
+list_bp = Blueprint('list',__name__,url_prefix='/list')
 
 @list_bp.route('/', methods=['GET', 'POST'])
 def lists_api():
