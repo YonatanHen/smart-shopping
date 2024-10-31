@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function ListTable({ data, setData }) {
+function ListTable({ data, setData, searchBarInput }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ function ListTable({ data, setData }) {
             })
     }, [])
 
-    if (error) return (<div>Error: {error}</div> );
+    if (error) return (<div>Error: {error}</div>);
     if (!data) return <div>Loading...</div>;
 
     return (
@@ -34,16 +34,19 @@ function ListTable({ data, setData }) {
                 </thead>
                 <tbody>
                     {data.map((product, idx) => {
-                        return (
-                            <tr>
-                                <td>{idx+1}</td>
-                                <td>{product.list}</td>
-                                <td>{product.item_name}</td>
-                                <td>{product.amount}</td>
-                                <td>{product.date_added}</td>
-                            </tr>
-                        )
-                    })}
+                        if (product.item_name.toLowerCase().includes(searchBarInput.toLowerCase()) 
+                            ||product.list == searchBarInput)
+                            return (
+                                <tr>
+                                    <td>{idx + 1}</td>
+                                    <td>{product.list}</td>
+                                    <td>{product.item_name}</td>
+                                    <td>{product.amount}</td>
+                                    <td>{product.date_added}</td>
+                                </tr>
+                            )
+                        }
+                    )}
                     <tr>
                     </tr>
                 </tbody>

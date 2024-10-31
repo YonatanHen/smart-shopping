@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import Form from 'react-bootstrap/Form';
+import React, { useEffect, useState } from 'react';
 
-function MainSearchBar() {
-    const [input, setInput] = useState("")
+function MainSearchBar({ input, setInput }) {
+
+    const handleSearchInput = (event) => {
+        setInput(event.target.value)
+    }
 
     return (
-        <h4>serach bar goes here</h4>
+        <Form>
+            <Form.Group>
+                <Form.Label>Serach</Form.Label>
+                <Form.Control type="text" placeholder="Enter item name or List ID" value={input} onChange={handleSearchInput}/>
+            </Form.Group>
+        </Form>
     )
 }
 
