@@ -3,12 +3,11 @@ import Table from 'react-bootstrap/Table';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function ListTable() {
-    const [data, setData] = useState(null);
+function ListTable({ data, setData }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/products")
+        axios.get("http://localhost:5000/product")
             .then(response => {
                 setData(response.data)
                 console.log(response.data)
