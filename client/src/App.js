@@ -1,5 +1,6 @@
 import './App.css';
 import ListTable from './components/ListTable';
+import Navbar from './components/navbar';
 import MainSearchBar from './components/mainSearchBar';
 import React, { useState } from 'react';
 
@@ -9,6 +10,7 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar />
       <h1>Smart Shopping App</h1>
       <MainSearchBar input={input} setInput={setInput}/>
       <ListTable data={data} setData={setData} searchBarInput={input} />
