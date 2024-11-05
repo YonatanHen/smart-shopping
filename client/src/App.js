@@ -11,7 +11,6 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      {/* <h1>Smart Shopping App</h1> */}
       <Outlet />
     </div>
   );

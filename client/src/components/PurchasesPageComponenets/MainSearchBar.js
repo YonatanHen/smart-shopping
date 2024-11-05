@@ -10,7 +10,6 @@ function MainSearchBar({ input, setInput }) {
     return (
         <Form>
             <Form.Group>
-                {/* <Form.Label>Serach</Form.Label> */}
                 <Form.Control type="text" placeholder="Search a product by name or list ID" value={input} onChange={handleSearchInput}/>
             </Form.Group>
         </Form>
