@@ -1,7 +1,7 @@
 import './App.css';
-import ListTable from './components/ListTable';
+import ListTable from './components/PurchasesPage/ListTable';
 import Navbar from './components/navbar';
-import MainSearchBar from './components/mainSearchBar';
+import MainSearchBar from './components/PurchasesPage/mainSearchBar';
 import React, { useState } from 'react';
 
 function App() {

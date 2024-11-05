@@ -1,5 +1,5 @@
 import Form from 'react-bootstrap/Form';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 function MainSearchBar({ input, setInput }) {
 
