@@ -1,8 +1,8 @@
 import './App.css';
-import ListTable from './components/PurchasesPage/ListTable';
 import Navbar from './components/navbar';
-import MainSearchBar from './components/PurchasesPage/mainSearchBar';
 import React, { useState } from 'react';
+import { Outlet } from "react-router-dom";
+
 
 function App() {
   const [data, setData] = useState(null);
@@ -11,9 +11,8 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <h1>Smart Shopping App</h1>
-      <MainSearchBar input={input} setInput={setInput}/>
-      <ListTable data={data} setData={setData} searchBarInput={input} />
+      {/* <h1>Smart Shopping App</h1> */}
+      <Outlet />
     </div>
   );
 }

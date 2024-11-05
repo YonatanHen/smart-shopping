@@ -8,10 +8,10 @@ function Navbar() {
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav ms-auto">
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Your Purchases</a>
+                        <a className="nav-link" href="/">Your Purchases</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Create Shopping List</a>
+                        <a className="nav-link" href="/create-list">Create Shopping List</a>
                     </li>
                 </ul>
             </div>
