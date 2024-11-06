@@ -3,8 +3,7 @@ import React from 'react';
 
 function MainSearchBar({ input, setInput }) {
 
-    const handleSearchInput = (event) => setInput(event.target.value)
-
+    const handleSearchInput = (event) => setInput(event.target.value);
 
     return (
         <Form>
@@ -12,7 +11,7 @@ function MainSearchBar({ input, setInput }) {
                 <Form.Control type="text" placeholder="Search a product by name or list ID" value={input} onChange={handleSearchInput}/>
             </Form.Group>
         </Form>
-    )
+    );
 }
 
-export default MainSearchBar
+export default MainSearchBar;

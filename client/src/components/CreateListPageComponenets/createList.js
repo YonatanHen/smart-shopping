@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import ItemsList from './ItemsList';
 
 function CreateList() {
   const [productInput, setProductInput] = useState("");
   const [amountInput, setAmountInput] = useState("");
+  const [list, editList] = useState([])
 
   const handleProductInput = (event) => setProductInput(event.target.value);
   const handleAmountInput = (event) => setAmountInput(event.target.value);
@@ -33,6 +35,7 @@ function CreateList() {
           </Col>
         </Form.Group>
       </Form>
+      <ItemsList listData={list} editList={editList}/>
     </div>
   );
 }
