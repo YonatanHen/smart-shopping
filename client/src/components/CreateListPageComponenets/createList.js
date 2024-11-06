@@ -7,8 +7,8 @@ function CreateList() {
   const [productInput, setProductInput] = useState("");
   const [amountInput, setAmountInput] = useState("");
 
-  const handleProductInput = (e) => setProductInput(e.target.value);
-  const handleAmountInput = (e) => setAmountInput(e.target.value);
+  const handleProductInput = (event) => setProductInput(event.target.value);
+  const handleAmountInput = (event) => setAmountInput(event.target.value);
 
   return (
     <div>
