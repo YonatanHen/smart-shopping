@@ -34,7 +34,7 @@ function ListTable({ data, setData, searchBarInput }) {
                 <tbody>
                     {data.map((product, idx) => {
                         if (product.item_name.toLowerCase().includes(searchBarInput.toLowerCase()) 
-                            ||product.list == searchBarInput)
+                            ||product.list === searchBarInput)
                             return (
                                 <tr>
                                     <td>{idx + 1}</td>

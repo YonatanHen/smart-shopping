@@ -5,8 +5,6 @@ import { Outlet } from "react-router-dom";
 
 
 function App() {
-  const [data, setData] = useState(null);
-  const [input, setInput] = useState("")
 
   return (
     <div className="App">
