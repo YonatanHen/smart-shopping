@@ -16,19 +16,20 @@ function CreateList() {
     <div>
       <h1>Create List</h1>
       <Form>
-        <Form.Group as={Row} className="align-items-center">
-          <Col>
+        <Form.Group as={Row} className="align-items-center create-list-form">
+          <Col xs="auto" className='create-list-label'>Add New Product:</Col>
+          <Col xs={4}>
             <Form.Control
               type="text"
-              placeholder="Enter product name"
+              placeholder="Product name"
               value={productInput}
               onChange={handleProductInput}
             />
           </Col>
-          <Col>
+          <Col xs={3}>
             <Form.Control
               type="text"
-              placeholder="Enter amount"
+              placeholder="Amount"
               value={amountInput}
               onChange={handleAmountInput}
             />

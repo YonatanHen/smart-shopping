@@ -8,6 +8,18 @@
   margin-top: 20px;
 }
 
+.create-list-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-left: 10%;
+}
+
+.create-list-form .create-list-label {
+  padding-right: 3px;
+  display: flex;
+  align-items: center;
+}
+
 table {
   border-collapse: collapse;
   width: 50%;            

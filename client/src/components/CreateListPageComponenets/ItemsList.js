@@ -21,6 +21,7 @@ function ItemsList({ currentListData, editCurrentList }) {
         <div>
             <ul>
                 {currentListData.length > 0 && currentListData.map((listItem, key) => { return <li>{listItem.item_name} | {listItem.amount}</li> })}
+                {/* Example list shown below, should be removed */}
                 <li>Creola Katherine Johnson: mathematician</li>
                 <li>Mario José Molina-Pasquel Henríquez: chemist</li>
                 <li>Mohammad Abdus Salam: physicist</li>
