@@ -20,7 +20,8 @@ function ItemsList({ currentListData, editCurrentList }) {
     return (
         <div>
             <ul>
-                {currentListData.length > 0 && currentListData.map((listItem, key) => { return <li>{listItem.item_name} | {listItem.amount}</li> })}
+                {Object.keys(currentListData).length > 0 && Object.entries(currentListData).map(([item_name, amount], idx) => { 
+                    return <li>{item_name} | {amount}</li> })}
             </ul>
         </div>
     );
