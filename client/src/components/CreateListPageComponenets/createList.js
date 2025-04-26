@@ -9,7 +9,7 @@ import axios from 'axios';
 function CreateList() {
   const [productInput, setProductInput] = useState("");
   const [amountInput, setAmountInput] = useState(0);
-  const [currentList, editCurrentList] = useState([])
+  const [currentList, editCurrentList] = useState({})
 
   const handleProductInput = (event) => setProductInput(event.target.value);
   const handleAmountInput = (event) => setAmountInput(event.target.value);
@@ -20,17 +20,25 @@ function CreateList() {
     switch (type) {
       case 'item':
         if (productInput.trim() !== "" && amountInput.trim() !== "") {
-          editCurrentList(prevList => [
+          editCurrentList(prevList => ({
             ...prevList,
-            { item_name: productInput.trim(), amount: amountInput.trim() }
-          ]);
+            [productInput.trim()]: parseInt(amountInput)
+          }));
 
           setProductInput("");
           setAmountInput("");
         }
         break;
       case 'list':
-        axios.post("http://localhost:5000/list/suggest")
+        console.log(currentList)
+        axios.post("http://localhost:5000/list/", currentList)
+          .then(response => {
+            console.log("List added successfully");
+            editCurrentList({});
+          })
+          .catch(error => {
+            console.error("Error adding list:", error);
+          });
         break;
       default:
         break;
