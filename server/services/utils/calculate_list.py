@@ -54,12 +54,9 @@ def calculate_new_list(test_set=0.3):
     dtc.fit(X_train, y_train)
     y_pred = dtc.predict(X_test)
     
-    res = []
+    res = {}
     for index, row in df.iterrows():
         if row['item_name'] in y_pred:
-            res.append({
-                'item_name': row['item_name'],
-                'amount': round(row['avg_amount'])
-            })
+            res[row['item_name']] = round(row['avg_amount'])
 
     return res
