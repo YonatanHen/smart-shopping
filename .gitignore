@@ -5,3 +5,4 @@
 testing/
 production/
 .vscode
+node_modules
