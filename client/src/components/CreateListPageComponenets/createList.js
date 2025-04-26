@@ -22,7 +22,7 @@ function CreateList() {
         if (productInput.trim() !== "" && amountInput.trim() !== "") {
           editCurrentList(prevList => ({
             ...prevList,
-            [productInput.trim()]: amountInput.trim()
+            [productInput.trim()]: parseInt(amountInput)
           }));
 
           setProductInput("");
@@ -30,7 +30,8 @@ function CreateList() {
         }
         break;
       case 'list':
-        axios.post("http://localhost:5000/list", currentList)
+        console.log(currentList)
+        axios.post("http://localhost:5000/list/", currentList)
           .then(response => {
             console.log("List added successfully");
             editCurrentList({});
