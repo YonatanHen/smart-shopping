@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ItemsList from './ItemsList';
+import axios from 'axios';
 
 function CreateList() {
   const [productInput, setProductInput] = useState("");
@@ -13,17 +14,26 @@ function CreateList() {
   const handleProductInput = (event) => setProductInput(event.target.value);
   const handleAmountInput = (event) => setAmountInput(event.target.value);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, type) => {
     event.preventDefault();
 
-    if (productInput.trim() !== "" && amountInput.trim() !== "") {
-      editCurrentList(prevList => [
-        ...prevList,
-        { item_name: productInput.trim(), amount: amountInput.trim() }
-      ]);
+    switch (type) {
+      case 'item':
+        if (productInput.trim() !== "" && amountInput.trim() !== "") {
+          editCurrentList(prevList => [
+            ...prevList,
+            { item_name: productInput.trim(), amount: amountInput.trim() }
+          ]);
 
-      setProductInput("");
-      setAmountInput("");
+          setProductInput("");
+          setAmountInput("");
+        }
+        break;
+      case 'list':
+        axios.post("http://localhost:5000/list/suggest")
+        break;
+      default:
+        break;
     }
   }
 
@@ -54,10 +64,11 @@ function CreateList() {
               ))}
             </Form.Select>
           </Col>
-          <Col xs={1}><Button onClick={(event) => handleSubmit(event)} variant="secondary" size='lg' disabled={productInput.trim() === "" || amountInput === 0}>+</Button></Col>
+          <Col xs={1}><Button onClick={(event) => handleSubmit(event, 'item')} variant="secondary" size='lg' disabled={productInput.trim() === "" || amountInput === 0}>+</Button></Col>
         </Form.Group>
       </Form>
       <ItemsList currentListData={currentList} editCurrentList={editCurrentList} />
+      <Button onClick={(event) => handleSubmit(event, 'list')}>Add List!</Button>
     </div>
   );
 }
