@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Button } from 'react-bootstrap';
 
 function ItemsList({ currentListData, editCurrentList }) {
     const [error, setError] = useState(null);
@@ -14,6 +15,12 @@ function ItemsList({ currentListData, editCurrentList }) {
             })
     }, [])
 
+    const handleDelete = (itemName) => {
+        const updatedList = {...currentListData};
+        delete updatedList[itemName];
+        editCurrentList(updatedList);
+    };
+
     if (error) return (<div>Error: {error}</div>);
     if (!currentListData) return <div>Loading...</div>;
 
@@ -21,7 +28,7 @@ function ItemsList({ currentListData, editCurrentList }) {
         <div>
             <ul>
                 {Object.keys(currentListData).length > 0 && Object.entries(currentListData).map(([item_name, amount], idx) => { 
-                    return <li>{item_name} | {amount}</li> })}
+                    return <li>{item_name} | {amount} <Button variant="danger" onClick={() => handleDelete(item_name)}>Delete</Button></li> })}
             </ul>
         </div>
     );

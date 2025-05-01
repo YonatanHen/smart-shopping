@@ -64,7 +64,7 @@ function CreateList() {
               value={amountInput}
               onChange={handleAmountInput}
             >
-              <option value={amountInput}>Amount</option>
+              <option value={amountInput}>{amountInput || "Amount"}</option>
               {Array.from({ length: 20 }, (_, i) => i + 1).map(number => (
                 <option key={number} value={number}>
                   {number}
