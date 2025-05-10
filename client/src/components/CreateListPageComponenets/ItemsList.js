@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
+import { API_URL } from '../../constants';
 
 function ItemsList({ currentListData, editCurrentList }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/list/suggest")
+        axios.get(API_URL + "/list/suggest")
             .then(response => {
                 editCurrentList(response.data)
             }).catch(err => {

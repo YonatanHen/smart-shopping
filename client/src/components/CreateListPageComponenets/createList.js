@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ItemsList from './ItemsList';
 import axios from 'axios';
+import { API_URL } from '../../constants';
 
 function CreateList() {
   const [productInput, setProductInput] = useState("");
@@ -31,7 +32,7 @@ function CreateList() {
         break;
       case 'list':
         console.log(currentList)
-        axios.post("http://localhost:5000/list/", currentList)
+        axios.post(API_URL + "/list/", currentList)
           .then(response => {
             console.log("List added successfully");
             editCurrentList({});

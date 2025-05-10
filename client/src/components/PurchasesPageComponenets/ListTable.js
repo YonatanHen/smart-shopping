@@ -1,12 +1,13 @@
 import Table from 'react-bootstrap/Table';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../constants';
 
 function ListTable({ data, setData, searchBarInput }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/product")
+        axios.get(API_URL + "/product")
             .then(response => {
                 setData(response.data)
                 console.log(response.data)
